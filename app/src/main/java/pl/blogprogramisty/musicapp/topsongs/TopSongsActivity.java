@@ -13,7 +13,6 @@ public class TopSongsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_top_songs);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.top_songs);
     }
 
     @Override
