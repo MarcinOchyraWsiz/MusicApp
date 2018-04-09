@@ -4,6 +4,6 @@ import java.util.List;
 
 public class TrendingList {
 
-    List<TrendingSingle> trending;
+    public List<TrendingSingle> trending;
 
 }

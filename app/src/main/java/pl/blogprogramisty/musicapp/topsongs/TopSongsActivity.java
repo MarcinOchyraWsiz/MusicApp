@@ -3,19 +3,25 @@ package pl.blogprogramisty.musicapp.topsongs;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.List;
 
 import pl.blogprogramisty.musicapp.R;
 import pl.blogprogramisty.musicapp.api.ApiService;
 import pl.blogprogramisty.musicapp.api.TrendingList;
+import pl.blogprogramisty.musicapp.api.TrendingSingle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TopSongsActivity extends AppCompatActivity {
+
+    RecyclerView rvList;
+    List<TrendingSingle> trendingSingles = new ArrayList<>(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +30,27 @@ public class TopSongsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        rvList = findViewById(R.id.rvlist);
+
+        TopSongsAdapter topSongsAdapter = new TopSongsAdapter(trendingSingles);
+        rvList.setAdapter(topSongsAdapter);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        rvList.setLayoutManager(linearLayoutManager);
+
         Call<TrendingList> trendingListCall = ApiService.getService().getTrendingList("us", "itunes", "singles");
         trendingListCall.enqueue(new Callback<TrendingList>() {
             @Override
             public void onResponse(@NonNull Call<TrendingList> call, @NonNull Response<TrendingList> response) {
                 TrendingList trendingList = response.body();
 
-                Log.d("TAG", new Gson().toJson(trendingList));
+                if (trendingList != null) {
+                    TopSongsActivity.this.trendingSingles.clear();
+                    TopSongsActivity.this.trendingSingles.addAll(trendingList.trending);
+                    TopSongsActivity.this.rvList.getAdapter().notifyDataSetChanged();
+                }
             }
 
             @Override
