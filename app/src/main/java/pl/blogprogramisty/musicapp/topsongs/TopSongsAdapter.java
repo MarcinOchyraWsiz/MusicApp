@@ -1,9 +1,11 @@
 package pl.blogprogramisty.musicapp.topsongs;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -35,6 +37,14 @@ public class TopSongsAdapter extends RecyclerView.Adapter<TopSongsAdapter.TopSon
         holder.tvTrack.setText(trendingSingle.strTrack);
         holder.tvArtist.setText(trendingSingle.strArtist);
         holder.tvAlbum.setText(trendingSingle.strAlbum);
+
+        holder.llContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), SongDetailsActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -44,6 +54,7 @@ public class TopSongsAdapter extends RecyclerView.Adapter<TopSongsAdapter.TopSon
 
     public class TopSongsViewHolder extends RecyclerView.ViewHolder {
 
+        LinearLayout llContainer;
         TextView tvPlace;
         TextView tvTrack;
         TextView tvArtist;
@@ -52,6 +63,7 @@ public class TopSongsAdapter extends RecyclerView.Adapter<TopSongsAdapter.TopSon
         public TopSongsViewHolder(View itemView) {
             super(itemView);
 
+            llContainer = itemView.findViewById(R.id.llContainer);
             tvPlace = itemView.findViewById(R.id.tvPlace);
             tvTrack = itemView.findViewById(R.id.tvTrack);
             tvArtist = itemView.findViewById(R.id.tvArtist);
