@@ -13,10 +13,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Date;
+
+import io.realm.Realm;
 import pl.blogprogramisty.musicapp.R;
 import pl.blogprogramisty.musicapp.api.ApiService;
 import pl.blogprogramisty.musicapp.api.Track;
 import pl.blogprogramisty.musicapp.api.Tracks;
+import pl.blogprogramisty.musicapp.database.Favorite;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +31,10 @@ public class SongDetailsActivity extends AppCompatActivity {
     public static final String ARTIST = "artist";
     public static final String TRACK_ID = "track_id";
 
+    private String track;
+    private String artist;
+    private int trackId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +43,9 @@ public class SongDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        String track = intent.getStringExtra(TRACK);
-        String artist = intent.getStringExtra(ARTIST);
-        int trackId = intent.getIntExtra(TRACK_ID, 0);
+        track = intent.getStringExtra(TRACK);
+        artist = intent.getStringExtra(ARTIST);
+        trackId = intent.getIntExtra(TRACK_ID, 0);
 
         getSupportActionBar().setTitle(track);
         getSupportActionBar().setSubtitle(artist);
@@ -106,6 +114,43 @@ public class SongDetailsActivity extends AppCompatActivity {
     }
 
     private void addRemoveFavorite() {
-        Toast.makeText(this, "TODO", Toast.LENGTH_SHORT).show();
+        Realm realm = Realm.getDefaultInstance();
+
+        Favorite favorite = realm
+                .where(Favorite.class)
+                .equalTo("trackId", trackId)
+                .findFirst();
+
+        if (favorite == null) {
+            addToFavorites(realm);
+        } else {
+            removeFromFavorites(realm, favorite);
+        }
+    }
+
+    private void addToFavorites(Realm realm) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(@NonNull Realm realm) {
+                Favorite favorite = realm.createObject(Favorite.class);
+                favorite.setArtist(artist);
+                favorite.setTrack(track);
+                favorite.setTrackId(trackId);
+                favorite.setDate(new Date());
+
+                Toast.makeText(SongDetailsActivity.this, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void removeFromFavorites(Realm realm, final Favorite favorite) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(@NonNull Realm realm) {
+                favorite.deleteFromRealm();
+
+                Toast.makeText(SongDetailsActivity.this, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
