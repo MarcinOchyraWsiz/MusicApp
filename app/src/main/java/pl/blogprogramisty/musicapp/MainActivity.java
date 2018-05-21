@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import pl.blogprogramisty.musicapp.favorites.FavoritesActivity;
+import pl.blogprogramisty.musicapp.searchalbum.SearchAlbumActivity;
 import pl.blogprogramisty.musicapp.topsongs.TopSongsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button bTopSongs = findViewById(R.id.bTopSongs);
         Button bFavorites = findViewById(R.id.bFavorites);
+        Button bSearchAlbum = findViewById(R.id.bSearchAlbum);
 
         bTopSongs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        bSearchAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchAlbumActivity.class);
                 startActivity(intent);
             }
         });

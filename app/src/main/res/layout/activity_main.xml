@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="2"
+    android:weightSum="3"
     tools:context="pl.blogprogramisty.musicapp.MainActivity">
 
     <Button
@@ -20,5 +20,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/favorites" />
+
+    <Button
+        android:id="@+id/bSearchAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/search_album" />
 
 </LinearLayout>
